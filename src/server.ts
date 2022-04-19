@@ -8,7 +8,8 @@ const app = express()
 app.use(express.json())
 
 app.post('/users', usersController.save)
+app.post('/users/bulk/:count', usersController.saveBulk)
 
 app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`)
+  process.stdout.write(`🚀 Server running on http://localhost:${port} \n`)
 })

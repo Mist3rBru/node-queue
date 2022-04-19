@@ -1,17 +1,18 @@
-import { User } from '../domain'
+import { Job, User } from '../domain'
 import { transporter, env } from '../config'
 
-export const RegistrationMail = {
+const job: Job = {
   key: 'RegistrationMail',
-  handle: async ({ data }): Promise<void> => {
-    const user: User = data.user
+  promise: async (user: User): Promise<void> => {
     console.log('Sending email to', user.name)
     const info = await transporter.sendMail({
       from: env.MAIL_HOST,
       to: user.email,
       subject: `Welcome ${user.name}`,
-      html: '<p>Test new user email</p>'
+      html: '<p>Test user registration email</p>'
     })
-    console.log('Email sent to', user.name, 'info: ', info.response)
+    console.log('Email sent to', user.name, ', info:', info.response)
   }
 }
+
+export default job
