@@ -6,7 +6,14 @@
   "scripts": {
     "dev": "npm-run-all -p dev:*",
     "dev:server": "ts-node-dev --transpile-only src/server.ts",
-    "dev:queue": "ts-node-dev --transpile-only src/queue.ts"
+    "dev:queue": "ts-node-dev --transpile-only src/queue.ts",
+    "docker": "npm run build && docker-compose up --build -d",
+    "docker:down": "docker-compose down",
+    "docker:start": "npm-run-all -p docker:start:*",
+    "docker:start:server": "nodemon -L --watch ./dist --nolazy ./dist/server.js",
+    "docker:start:queue": "nodemon -L --watch ./dist --nolazy ./dist/queue.js",
+    "build": "rimraf dist && tsc",
+    "build:watch": "rimraf dist && tsc"
   },
   "keywords": [],
   "author": "",
@@ -22,12 +29,18 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
+    "rimraf": "^3.0.2",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.3"
   },
   "dependencies": {
     "bull": "^4.8.1",
     "express": "^4.17.3",
-    "nodemailer": "^6.7.3"
+    "nodemailer": "^6.7.3",
+    "nodemon": "^2.0.15",
+    "npm-run-all": "^4.1.5"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
