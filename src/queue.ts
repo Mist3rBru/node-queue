@@ -15,21 +15,17 @@ export class Queue {
   private runningQueue: number = 0
 
   private getJobs (): Job[] {
-    const jobs = []
-    readdirSync(resolve(__dirname, 'jobs')).forEach(async file => {
-      const job = (await import(`./jobs/${file}`)).default
-      jobs.push(job)
+    const jobs: Job[] = []
+    const files = readdirSync(resolve(__dirname, 'jobs'))
+    files.forEach(async file => {
+      jobs.push((await import(`./jobs/${file}`)).default)
     })
     return jobs
   }
 
   add (data: any, jobKey: string): void {
     const job = this.jobs.find(job => job.key === jobKey)
-    this.waitingQueue.push({
-      job,
-      data,
-      attempts: 0
-    })
+    this.waitingQueue.push(Object.assign(job, { data, attempts: 0 }))
     this.process()
   }
 
@@ -47,7 +43,7 @@ export class Queue {
     }
     this.runningQueue++
     const queueJob = this.waitingQueue.shift()
-    await queueJob.job.promise(queueJob.data).catch(() => {
+    await queueJob.promise(queueJob.data).catch(() => {
       process.stdout.write(`☢ ${queueJob.attempts} tries \n`)
       if (queueJob.attempts < this.maxAttempts) {
         queueJob.attempts++

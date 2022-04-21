@@ -4,7 +4,8 @@ export type Job = {
 }
 
 export type QueueJob = {
-  job: Job
+  key: string
+  promise: any
   data: any
   attempts: number
 }
