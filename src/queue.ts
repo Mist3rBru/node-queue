@@ -11,7 +11,7 @@ export class Queue {
   }
 
   private readonly jobs = this.getJobs()
-  private readonly waitingQueue: QueueJob[] = []
+  private waitingQueue: QueueJob[] = []
   private runningQueue: number = 0
 
   private getJobs (): Job[] {
@@ -35,24 +35,27 @@ export class Queue {
 
   private async process (): Promise<void> {
     if (this.runningQueue >= this.maxParallelProcs) {
-      setTimeout(() => {
-        process.stdout.write(`Waiting 1 of ${this.runningQueue} jobs to end \n`)
-        this.process()
-      }, 1000)
+      process.stdout.write(`Waiting 1 of ${this.runningQueue} jobs to end (${this.waitingQueue.length} on waiting queue)\n`)
+      setTimeout(() => this.process(), 200)
       return
     }
-    this.runningQueue++
     const queueJob = this.waitingQueue.shift()
-    await queueJob.promise(queueJob.data).catch(() => {
-      process.stdout.write(`☢ ${queueJob.attempts} tries \n`)
-      if (queueJob.attempts < this.maxAttempts) {
+    this.runningQueue++
+    try {
+      await queueJob.promise(queueJob.data)
+    } catch (error) {
+      process.stdout.write(`☢ ${queueJob?.attempts} tries \n`)
+      if (!queueJob) {
+        process.stdout.write('*** ENDING QUEUE *** \n')
+      } else if (queueJob.attempts < this.maxAttempts) {
         queueJob.attempts++
         this.waitingQueue.unshift(queueJob)
         this.process()
       } else {
+        this.waitingQueue = this.waitingQueue.filter(job => job !== queueJob)
         process.stdout.write('♨ MAX ATTEMPTS REACHED \n')
       }
-    })
+    }
     this.runningQueue--
   }
 }
