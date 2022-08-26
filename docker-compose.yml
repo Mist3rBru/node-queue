@@ -2,15 +2,14 @@ version: "3"
 services:
   api:
     container_name: queue-container
-    image: node:16
-    working_dir: /usr/src/node-queue
+    image: queue-api
     restart: always
-    volumes:
-      - ./dist/:/usr/src/node-queue/dist/
-      - ./package-lock.json:/usr/src/node-queue/package-lock.json
-      - ./package.json:/usr/src/node-queue/package.json
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
     ports:
-      - '3030:3030'
+      - '4030:4030'
     environment:
-      - APP_PORT=3030
-    command: bash -c "npm ci --production && npm run docker:start"
+      - APP_PORT=4030
+    command: bash -c "npm run dev"
