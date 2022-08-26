@@ -2,9 +2,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "commonjs",
-    "target": "es2021",
+    "target": "ES5",
     "esModuleInterop": true,
-    "baseUrl": "src",
-    "forceConsistentCasingInFileNames": true
   }
 }

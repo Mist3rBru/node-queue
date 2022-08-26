@@ -1,4 +1,4 @@
-FROM node:lts as base
+FROM node:14 as base
 WORKDIR /queue
 COPY /src ./src
 COPY tsconfig* package.json ./

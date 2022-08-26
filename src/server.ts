@@ -1,5 +1,5 @@
-import { app } from './config'
 import 'dotenv/config'
+import { app } from './config/app'
 
 const port = process.env.APP_PORT || '4030'
 

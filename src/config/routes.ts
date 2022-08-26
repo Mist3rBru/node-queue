@@ -1,5 +1,5 @@
 import { Express } from 'express'
-import { usersController } from '../../controllers'
+import { usersController } from '../users-controller'
 
 export default (app: Express): void => {
   app.post('/users', usersController.save)
