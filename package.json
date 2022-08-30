@@ -10,7 +10,9 @@
     "docker": "docker-compose up",
     "docker:down": "docker-compose down",
     "docker:build": "docker-compose build",
-    "test": "jest --no-cache --watch"
+    "test": "jest --no-cache",
+    "test:unit": "npm test -- --watch",
+    "test:ci": "npm test -- --silent --coverage"
   },
   "author": "github.com/Mist3rBru",
   "dependencies": {
