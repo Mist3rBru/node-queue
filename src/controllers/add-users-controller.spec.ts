@@ -1,43 +1,50 @@
-import { IAddQueue } from '../protocols/queue-model'
-import { AddUserController } from './add-user-controller'
+import { IAddQueueBulk } from '../protocols/queue-model'
+import { AddUsersController } from './add-users-controller'
 import { faker } from '@faker-js/faker'
 
 interface SutTypes {
-  sut: AddUserController
+  sut: AddUsersController
   queueSpy: QueueSpy
 }
 
 const makeSut = (): SutTypes => {
   const queueSpy = new QueueSpy()
-  const sut = new AddUserController(queueSpy)
+  const sut = new AddUsersController(queueSpy)
   return {
     sut,
     queueSpy
   }
 }
 
-const mockRequest = (): AddUserController.Request => ({
+const mockRequest = (): AddUsersController.Request => ({
   name: faker.name.fullName(),
   email: faker.internet.email(),
-  password: faker.internet.password()
+  password: faker.internet.password(),
+  count: faker.datatype.number().toString()
 })
 
-class QueueSpy implements IAddQueue {
-  data: any
+class QueueSpy implements IAddQueueBulk {
+  data: any[]
   calledTimes = 0
-  add (data: any): void {
+  addBulk (data: any[]): void {
     this.calledTimes++
     this.data = data
   }
 }
 
-describe('AddUserController', () => {
+describe('AddUsersController', () => {
   it('should call queue with correct values', async () => {
     const { sut, queueSpy } = makeSut()
     const request = mockRequest()
     await sut.handle(request)
     expect(queueSpy.calledTimes).toBe(1)
-    expect(queueSpy.data).toStrictEqual(request)
+    expect(queueSpy.data).toStrictEqual(
+      new Array(parseInt(request.count)).fill({
+        name: request.name,
+        email: request.email,
+        password: request.password
+      })
+    )
   })
 
   it('should return 200 on success', async () => {
@@ -46,15 +53,15 @@ describe('AddUserController', () => {
     expect(httpResponse).toStrictEqual({
       statusCode: 200,
       body: {
-        message: 'Queue is running'
+        message: 'Bulk queue is running'
       }
     })
   })
 
   it('should return 500 if any dependency throws', async () => {
-    const suts: AddUserController[] = [].concat(
-      new AddUserController({
-        add: () => {
+    const suts: AddUsersController[] = [].concat(
+      new AddUsersController({
+        addBulk: () => {
           throw new Error()
         }
       })

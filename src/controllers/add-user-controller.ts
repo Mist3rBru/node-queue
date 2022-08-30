@@ -6,13 +6,22 @@ export class AddUserController implements IController {
   constructor (public queue: IAddQueue) {}
 
   async handle (request: AddUserController.Request): Promise<HttpResponse> {
-    const { name, email, password } = request
-    const user: IUser = { name, email, password }
-    this.queue.add(user)
-    return {
-      statusCode: 200,
-      body: {
-        message: 'Queue is running'
+    try {
+      const { name, email, password } = request
+      const user: IUser = { name, email, password }
+      this.queue.add(user)
+      return {
+        statusCode: 200,
+        body: {
+          message: 'Queue is running'
+        }
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: {
+          error
+        }
       }
     }
   }
