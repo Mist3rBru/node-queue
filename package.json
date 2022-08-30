@@ -2,10 +2,10 @@
   "name": "node-queue",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "src/main/server.ts",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "tsx src/server.ts",
+    "start": "node dist/main/server.js",
+    "dev": "tsx src/main/server.ts",
     "build": "rimraf dist && tsc",
     "docker": "docker-compose up",
     "docker:down": "docker-compose down",
