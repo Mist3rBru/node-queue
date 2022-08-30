@@ -1,4 +1,4 @@
-import { IMailer } from './protocols/mailer-model'
+import { IMailer } from '../protocols/mailer-model'
 import { createTransport } from 'nodemailer'
 
 export class MailerAdapter implements IMailer {

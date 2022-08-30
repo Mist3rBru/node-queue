@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
+      target: base
     ports:
       - '4030:4030'
     environment:

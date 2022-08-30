@@ -7,15 +7,15 @@
     "start": "node dist/server.js",
     "dev": "tsx src/server.ts",
     "build": "rimraf dist && tsc",
-    "docker": "docker-compose up --build",
-    "docker:down": "docker-compose down"
+    "docker": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build"
   },
   "author": "github.com/Mist3rBru",
   "dependencies": {
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
-    "nodemailer": "^6.7.3",
-    "nodemon": "^2.0.15"
+    "nodemailer": "^6.7.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
