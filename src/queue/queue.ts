@@ -5,18 +5,21 @@ import {
   IQueueJob
 } from '../protocols/queue-model'
 
-interface IQueue extends IAddQueue, IAddQueueBulk {
-}
+interface IQueue extends IAddQueue, IAddQueueBulk {}
 
 export class Queue implements IQueue {
-  constructor (
-    private readonly job: IJob,
-    readonly maxParallelProcs: number,
-    readonly maxAttempts: number
-  ) {}
-
-  waitingQueue: IQueueJob[] = []
-  runningQueue: number = 0
+  private readonly job: IJob
+  public waitingQueue: IQueueJob[]
+  public runningQueue: number
+  public maxParallelProcs: number
+  public maxAttempts: number
+  constructor (job: IJob, maxParallelProcs = 1, maxAttempts = 3) {
+    this.job = job
+    this.maxParallelProcs = maxParallelProcs
+    this.maxAttempts = maxAttempts
+    this.runningQueue = 0
+    this.waitingQueue = []
+  }
 
   add (data: any): void {
     this.waitingQueue.push({
